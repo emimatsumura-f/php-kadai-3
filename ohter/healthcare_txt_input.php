@@ -16,10 +16,13 @@
             </div>
             <div>
                 <label for="weight">体重 (kg):</label>
+                <!-- oninput属性で値が変更されるたびにcalculatePeeRatio()関数を呼び出す -->
                 <input type="number" id="weight" name="weight" step="0.1" oninput="calculatePeeRatio()" />
             </div>
             <div>
                 <label for="pee">尿量 (ml):</label>
+                <!-- requiredで入力必須 -->
+                <!-- oninput属性で値が変更されるたびにcalculatePeeRatio()関数を呼び出す -->
                 <input type="number" id="pee" name="pee" required oninput="calculatePeeRatio()" />
                 <input type="hidden" id="pee_ratio_result" name="pee_ratio_result">
                 <div id="pee_ratio_display"></div>
@@ -37,6 +40,7 @@
                 </select>
             </div>
             <button type="submit">送信</button>
+            <button type="button" onclick="window.location.href='healthcare_txt_clear.php'">データクリア</button>
             <p>⚠️尿量/体重が40を上回ると、病気により尿量が増えている可能性があります。診察を検討しましょう！</p>
 
             <a href="healthcare_csv_create.php">csvダウンロード</a>
