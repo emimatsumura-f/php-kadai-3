@@ -2,7 +2,7 @@
 // var_dump($_POST);
 // exit();
 
-
+include('function.php');
 // 入力チェック
 if (
     !isset($_POST['input_date']) || $_POST['input_date'] === '' ||
@@ -24,23 +24,26 @@ $manual_pee_ratio = $_POST['manual_pee_ratio'];
 $poop = $_POST['poop'];
 
 // データベース接続設定
-$dbn = 'mysql:dbname=php_kadai_3;charset=utf8mb4;port=3306;host=localhost';
-$user = 'root';
-$pwd = '';
+// $dbn = 'mysql:dbname=php_kadai_3;charset=utf8mb4;port=3306;host=localhost';
+// $user = 'root';
+// $pwd = '';
 
-// データベース接続
-try {
-    $pdo = new PDO($dbn, $user, $pwd);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch (PDOException $e) {
-    exit("DB接続エラー: " . $e->getMessage());
-}
+// // データベース接続
+// try {
+//     $pdo = new PDO($dbn, $user, $pwd);
+//     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+// } catch (PDOException $e) {
+//     exit("DB接続エラー: " . $e->getMessage());
+// }
+
+// 関数を呼び出して$pdoに代入
+$pdo = connect_to_db();
 
 // SQL作成
 $sql = 'INSERT INTO healthcare 
-        (input_date, weight, pee, total_pee, pee_weight_ratio, poop) 
+        (input_date, weight, pee, total_pee, manual_pee_ratio, poop) 
         VALUES 
-        (:input_date, :weight, :pee, :total_pee, :pee_weight_ratio, :poop)';
+        (:input_date, :weight, :pee, :total_pee, :manual_pee_ratio, :poop)';
 
 try {
     // プリペアドステートメント
@@ -51,14 +54,14 @@ try {
     $stmt->bindValue(':weight', json_encode($weights), PDO::PARAM_STR);
     $stmt->bindValue(':pee', json_encode($pees), PDO::PARAM_STR);
     $stmt->bindValue(':total_pee', $total_pee, PDO::PARAM_STR);
-    $stmt->bindValue(':pee_weight_ratio', $manual_pee_ratio, PDO::PARAM_STR);
+    $stmt->bindValue(':manual_pee_ratio', $manual_pee_ratio, PDO::PARAM_STR);
     $stmt->bindValue(':poop', $poop, PDO::PARAM_STR);
 
     // SQL実行
     $status = $stmt->execute();
 
     // リダイレクトまたは成功メッセージ
-    header("Location: index.html?status=success");
+    header("Location: index.php?status=success");
     exit();
 } catch (PDOException $e) {
     exit("SQL実行エラー: " . $e->getMessage());
